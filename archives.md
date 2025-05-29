@@ -2,30 +2,34 @@
 
 ## categories
 
+### applications
+
+### college-life
+
+### compiler
+
+### computer-network
+
+### frontend
+
+#### git
+
 ### languages
 
 #### c-cpp
 
 #### python
 
-### compiler
+### linux
 
 ### operating-system
 
 ### security
-
-### frontend
-
-### linux
-
-### applications
-
-#### git
-
-### college-life
 
 ## tags
 
 ### bugs
 
 ### lock-free
+
+## timeline

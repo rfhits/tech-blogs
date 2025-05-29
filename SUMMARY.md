@@ -24,6 +24,8 @@
     -   [进程、线程与 Light Weight Process](./operating-system/process-thread-lwp.md)
 -   [Linux](./archives.md#linux)
     -   [脚本中切换目录命令不生效](./linux/cd-does-not-take-effect-in-script.md)
+-   [计算机网络]()
+    -   [计算机网络编程入门](./computer-network/guide-to-network-programming/guide-to-network-programming.md)
 -   [计算机安全](./archives.md#security)
     -   [HMAC](./security/hmac.md)
 -   [前端](./archives.md#frontend)
