@@ -1,16 +1,19 @@
 # ELF 文件的链接与加载
 
--   created: 2024-07-02T11:03+08:00
--   published: 2024-07-02T16:44+08:00
--   modified: 2024-11-19T23:14+08:00
--   categories: operating-system
+[toc]
+
+```
+v2
+created, 2024-07-02T11:03+08:00
+published, 2024-07-02T16:44+08:00
+modified, 2024-11-19T23:14+08:00
+category: operating-system
+```
 
 前置阅读：
 
 1. [calling convention](../../compiler/calling-convention/calling-convention.md)
 2. x86 汇编教学
-
-[toc]
 
 ## compiler linker loader
 
