@@ -2,6 +2,7 @@
 
 -   [Home](./README.md)
 -   [c/cpp](./SUMMARY.md)
+    -   [cpp 中的内存序](./languages/c-cpp/cpp-memory-order/cpp-memory-order.md)
     -   [C++模板](./languages/c-cpp/cpp-template/cpp-template.md)
     -   [左值、右值、移动语义、完美转发](./languages/c-cpp/cpp-lvalue-rvalue-move-forward.md)
     -   [lambda 表达式与「函数对象」（functor）](./languages/c-cpp/cpp-lambda-functor/cpp-lambda-functor.md)
