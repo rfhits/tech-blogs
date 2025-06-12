@@ -1,8 +1,14 @@
 # 左值、右值、移动语义、完美转发
 
--   created: 2024-06-25T15:20+08:00
--   published: 2024-06-26T10:40+08:00
--   categories: c-cpp
+[toc]
+
+```
+v2
+created, 2024-06-25T15:20+08:00
+published, 2024-06-26T10:40+08:00
+modified, 2025-05-16T19:01+08:00, 排版，补充新内容，删除使用 typeinfo 的评估代码
+category: c-cpp
+```
 
 [C\+\+ Rvalue References Explained](http://thbecker.net/articles/rvalue_references/section_01.html)
 
@@ -95,10 +101,14 @@ foo(1); // foo(int&&) called
 
 有了这种类型，就可以提供函数的重载：
 
-> By overloading a function like this:
-> `void foo(X& x);` // lvalue reference overload
+> By overloading a function like this:  
+> `void foo(X& x);` // lvalue reference overload  
 > `void foo(X&& x);` // rvalue reference overload
-> you can branch at compile time on the condition "is foo being called on an lvalue or an rvalue?" The primary (and for all practical purposes, the only) application of that is to overload the copy constructor and copy assignment operator of a class for the sake of implementing move semantics. If and when you do that, make sure to pay attention to exception handling, and use the new noexcept keyword as much as you can.
+>
+> you can branch at compile time on the condition "is foo being called on an lvalue or an rvalue?"
+> The primary (and for all practical purposes, the only) application of that is to overload the copy constructor and copy assignment operator of a class for the sake of implementing move semantics.
+> If and when you do that, make sure to pay attention to exception handling, and use the new noexcept keyword as much as you can.
+>
 > [Page 10 of: C\+\+ Rvalue References Explained](http://thbecker.net/articles/rvalue_references/section_10.html)
 
 ## 手写 `std::move`
@@ -166,35 +176,38 @@ struct remove_reference<_Tp&&> // specialization for rref type
 
 remove_reference 真的很短，我们可以直接使用 `remove_reference<int&>::type` 表示 `int` 类型。
 
-```cpp
-int main()
-{
-    std::cout << sizeof(std::remove_reference<int&>::type) << std::endl;
-    std::cout << sizeof(int) << std::endl;
-    return 0;
-}
-```
-
 ### `move`
 
 move 作为一个函数模板，如果参数是左值，就把它 cast 为右值，如果它是右值，还是把它 cast 为右值。
 
+```cpp
+auto move(T v) { // whatever T is T / T& / T&&
+    return static_cast<remove_reference<T>&&> (x);
+}
+```
+
 这个函数模板既可以接受左值，又可以接受右值，就涉及到「万能引用（universal references）」的概念，这个术语更好叫做 forwarding references，参考 [c\+\+ \- Is there a difference between universal references and forwarding references? \- Stack Overflow](https://stackoverflow.com/questions/39552272/is-there-a-difference-between-universal-references-and-forwarding-references)
 
+引用折叠的作用是接受任何类型的参数，并且推断其类型。
+
 > The first of the remaining two rules for rvalue references affects old-style lvalue references as well. Recall that in pre-11 C++, it was not allowed to take a reference to a reference: something like A& & would cause a compile error. C++11, by contrast, introduces the following reference collapsing rules1:
-> A& & becomes A&
-> A& && becomes A&
-> A&& & becomes A&
+> A& & becomes A&  
+> A& && becomes A&  
+> A&& & becomes A&  
 > A&& && becomes A&&
+>
 > Secondly, there is a special template argument deduction rule for function templates that take an argument by rvalue reference to a template argument:
+>
 > template<typename T>
 > void foo(T&&);
+>
 > Here, the following apply:
 > When foo is called on an lvalue of type A, then T resolves to A& and hence, by the reference collapsing rules above, the argument type effectively becomes A&.
 > When foo is called on an rvalue of type A, then T resolves to A, and hence the argument type becomes A&&.
+>
 > [Page 8 of: C\+\+ Rvalue References Explained](http://thbecker.net/articles/rvalue_references/section_08.html)
 
-然后再看 std::move 的实现，首先通过 一个 universal reference 来作为参数，然后 move 的返回类型就是 remove_reference 后再 &&，也就是 `remove_reference<T>::type&&`，最后生效的只是一个 static_cast。
+然后再看 `std::move` 的实现，首先通过 一个 universal reference 来作为参数，然后 move 的返回类型就是 remove_reference 后再 &&，也就是 `remove_reference<T>::type&&`，最后生效的只是一个 static_cast。
 
 要注意的是因为使用了嵌套类型，所以有 `typename` 关键字。
 
@@ -325,9 +338,9 @@ T &&fwd_without_rmref(T &arg)
 int main()
 {
     int i = 1;
-    fwd_with_rmref(i);      // can't pass compling, we have to supply tempate argument, let's what we expect
-    fwd_with_rmref<int>(i); // pass compling
-    fwd_without_rmref(i);   // pass compling, but forward should not deducte argument type itself
+    fwd_with_rmref(i);      // can't pass compiling, we have to supply template argument, let's what we expect
+    fwd_with_rmref<int>(i); // pass compiling
+    fwd_without_rmref(i);   // pass compiling, but forward should not deduct argument type itself
     return 0;
 }
 ```
@@ -421,7 +434,10 @@ main:
 ## 总结
 
 1. 类模板针对引用类型特化的写法很特别，代表是 remove_reference
+   有了类模板，就可以判断类型是左值引用还是右值引用
 2. 函数模板针对引用类型特化的写法很特别，代表是 move
 3. 万能引用是函数模板的一种特化写法，既可以接收左值参数，也可以接收右值参数
-4. move 通过万能引用接收不同类型的参数，统一 remove reference 后 cast 成右值
-5. `forward<T> (remove_ref<T>&)` 总是收到左值引用类型，希望通过形参推导出原有类型并返回
+   并且通过引用折叠机制，推导出转发引用的参数类型
+4. 我们可以结合类模板和函数模板，用函数模板推断出类型，用类模板修改类型返回
+5. move 通过万能引用接收不同类型的参数，统一 remove reference 后 cast 成右值
+6. `forward<T> (remove_ref<T>&)` 总是收到左值引用类型，希望通过形参推导出原有类型并返回
