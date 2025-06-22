@@ -6,6 +6,7 @@ created, 2024-06-27T11:04+08:00
 modified, 2025-06-06T12:07+08:00
 modified, 2025-06-21T20:50+08:00, 看到了 Asymmetric Transfer 但是看不懂
 published, 2025-06-21T20:58+08:00
+modified, 2025-06-22T08:33+08:00, 添加对称转移
 category: c-cpp
 ```
 
@@ -16,8 +17,9 @@ category: c-cpp
 2. [Understanding the promise type](https://lewissbaker.github.io/2018/09/05/understanding-the-promise-type)
    主要是说 promise_type 如何改写 `co_await`、`co_yield` 和 `co_return`，像异常的传播我暂时也看不懂
 3. [Understanding operator co_await](https://lewissbaker.github.io/2017/11/17/understanding-operator-co-await)
-4. [Asymmetric Transfer](https://lewissbaker.github.io/2017/09/25/coroutine-theory)
+4. [Understanding Symmetric Transfer](https://lewissbaker.github.io/2017/09/25/coroutine-theory)
    我理解为就是两个协程相互 resume，而 resume 即函数调用，虽然 rbp 调整为协程帧，但是栈指针一直下压，导致溢出
+   解决方法是：在原本要调用 `coro.resume()` 函数调用处直接返回 `coroutine_handle coro`
 
 ## `promise_type`: 协程状态存储
 
@@ -119,3 +121,25 @@ callee 发起了一个非常耗时的调用，他不想阻塞在这里，就需�
 博客原文给了一个例子，通过 `await_suspend(handle)` 把 `handle` 注册到 event 对象中，然后立刻返回。
 
 因为 event 是异步的，当 event 在某个线程中被完成后，可以检查挂在自己身上的 handles，逐个 resume。
+
+## symmetric transfer
+
+这个原博客新加入了一个类，叫做 `final_awaiter`，前三篇博客都没有提到这个玩意。
+作用和 `awaiter` 也差不多，协程会在这里 `resume` caller。
+
+如果手动调用 `resume` 会导致一次函数调用，不过 `final_awaiter` 作为最后定义的执行逻辑，
+可以直接利用尾递归优化，返回一个 `coroutine_handle`，直接 `jmp` 到 caller，避免一次 function call。
+
+简而言之呢，原来的问题是：
+
+1. `awaiter::await_suspend` 中 `resume` 自己所在的协程，导致一次 call
+2. `final_awaiter` 中 `resume` continuation 又导致一次 call
+
+解决方法是：
+
+1. `awaiter::await_suspend` 直接 return 表示自己的 `coroutine_handle`，消除 call
+2. `final_awaiter::await_suspend` 直接 return continuation 的 `coroutine_handle` 消除 call
+
+具体的机器码转换博主没有说明
+
+这样我们就有三种 `await_suspend` 的形式了，返回 `void/bool/coroutine_handle`。
