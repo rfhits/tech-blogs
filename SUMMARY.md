@@ -7,6 +7,7 @@
     -   [左值、右值、移动语义、完美转发](./languages/c-cpp/cpp-lvalue-rvalue-move-forward.md)
     -   [lambda 表达式与「函数对象」（functor）](./languages/c-cpp/cpp-lambda-functor/cpp-lambda-functor.md)
     -   [Bazel 使用](./languages/c-cpp/bazel-usage/bazel-usage.md)
+    -   [cmake 使用](./languages/c-cpp/cmake-usage/cmake-usage.md)
     -   [协程](./languages/c-cpp/cpp-coroutine/cpp-coroutine.md)
 -   [python](./SUMMARY.md)
     -   [管理 Python 环境](./languages/python/manage-python-environments.md)
