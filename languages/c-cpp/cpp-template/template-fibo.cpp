@@ -1,25 +1,31 @@
-template <int x> constexpr int fib() { return fib<x - 1>() + fib<x - 2>(); }
+using ull = unsigned long long;
 
-template <> constexpr int fib<0>() { return 1; }
+template <ull x> consteval ull fib() { return fib<x - 1>() + fib<x - 2>(); }
 
-template <> constexpr int fib<1>() { return 1; }
+template <> consteval ull fib<0>() { return 1; }
 
-template <int x> struct fib_t {
-    static int const value = fib_t<x - 1>::value + fib_t<x - 2>::value;
+template <> consteval ull fib<1>() { return 1; }
+
+template <ull x> struct fib_t {
+    static ull const value = fib_t<x - 1>::value + fib_t<x - 2>::value;
 };
 
 template <> struct fib_t<0> {
-    static int const value = 1;
+    static ull const value = 1;
 };
 
 template <> struct fib_t<1> {
-    static int const value = 1;
+    static ull const value = 1;
 };
 
 #include <iostream>
 
 int main() {
-    std::cout << fib<5>() << std::endl;
-    std::cout << fib_t<6>::value << std::endl;
+    // if we use constexpr to specify function, compile and run will be slow
+    constexpr ull x = fib<100>();
+    std::cout << x << std::endl;
+
+    // struct: compile fast and run fast
+    std::cout << fib_t<100>::value << std::endl;
     return 0;
 }

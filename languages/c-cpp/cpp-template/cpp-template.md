@@ -1,9 +1,11 @@
 # C++ 模板
 
--   created: 2024-03-24T20:24+08:00
--   modified: 2024-12-10T11:36+08:00
--   published: 2024-11-17T16:37+08:00
--   categories: c-cpp
+```
+created, 2024-03-24T20:24+08:00
+modified, 2024-12-10T11:36+08:00
+published, 2024-11-17T16:37+08:00
+category: c-cpp
+```
 
 [toc]
 
