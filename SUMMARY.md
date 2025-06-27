@@ -24,6 +24,7 @@
     -   [CAS 在 ARM 架构与 x86_64 架构上的实现](/operating-system/cas-on-arm-and-x86-64/cas-on-arm-and-x86-64.md)
     -   [ELF 文件的链接与加载](./operating-system/elf-linker-loader/elf-linker-loader.md)
     -   [进程、线程与 Light Weight Process](./operating-system/process-thread-lwp.md)
+    -   [xv6 代码执行流分析](./operating-system/xv6-execution-flow/xv6-execution-flow.md)
 -   [linux](./SUMMARY.md)
     -   [脚本中切换目录命令不生效](./linux/cd-does-not-take-effect-in-script.md)
 -   [computer-network 计算机网络](./SUMMARY.md)
