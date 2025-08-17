@@ -1,6 +1,8 @@
 # SUMMARY
 
 -   [Home](./README.md)
+-   [algorithm-problems](./SUMMARY.md)
+    -   [使用 popcount 使得两个集合完全相等的最小操作次数](./algorithm-problems/popcount-match.md)
 -   [c/cpp](./SUMMARY.md)
     -   [cpp 中的内存序](./languages/c-cpp/cpp-memory-order/cpp-memory-order.md)
     -   [C++模板](./languages/c-cpp/cpp-template/cpp-template.md)
