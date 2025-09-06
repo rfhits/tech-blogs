@@ -4,6 +4,7 @@
 -   [algorithm-problems](./SUMMARY.md)
     -   [使用 popcount 使得两个集合完全相等的最小操作次数](./algorithm-problems/popcount-match.md)
 -   [c/cpp](./SUMMARY.md)
+    -   [虚函数、虚表](./languages/c-cpp/cpp-virtual/cpp-virtual.md)
     -   [cpp 中的内存序](./languages/c-cpp/cpp-memory-order/cpp-memory-order.md)
     -   [C++模板](./languages/c-cpp/cpp-template/cpp-template.md)
     -   [左值、右值、移动语义、完美转发](./languages/c-cpp/cpp-lvalue-rvalue-move-forward.md)
